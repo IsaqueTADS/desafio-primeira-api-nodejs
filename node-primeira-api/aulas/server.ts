@@ -1,8 +1,15 @@
-// const fastify = require("fastify");
-// const crypto = require("crypto");
-
 import fastify from "fastify";
-import crypto from "node:crypto";
+import {
+  validatorCompiler,
+  serializerCompiler,
+  type ZodTypeProvider,
+  jsonSchemaTransform,
+} from "fastify-type-provider-zod";
+import { fastifySwagger } from "@fastify/swagger";
+import { createCourseRoute } from "./src/routes/create-course.ts";
+import { getCoursesByIdRoute } from "./src/routes/get-cousers-by-id.ts";
+import { getCoursesRoute } from "./src/routes/get-courses.ts";
+import scalarAPIReference from "@scalar/fastify-api-reference";
 
 const server = fastify({
   logger: {
@@ -14,57 +21,33 @@ const server = fastify({
       },
     },
   },
-});
+}).withTypeProvider<ZodTypeProvider>();
 
-const courses = [
-  { id: "1", title: "Curso de Node.js" },
-  { id: "2", title: "Introdução ao React" },
-  { id: "3", title: "Fundamentos de Python" },
-  { id: "4", title: "Banco de Dados com MongoDB" },
-  { id: "5", title: "Desenvolvimento Web com HTML e CSS" },
-  { id: "6", title: "JavaScript Avançado" },
-  { id: "7", title: "Machine Learning para Iniciantes" },
-  { id: "8", title: "Docker e Contêineres" },
-  { id: "9", title: "DevOps Básico" },
-  { id: "10", title: "Programação Funcional em JavaScript" },
-];
-server.get("/courses", () => {
-  return { courses };
-});
+if (process.env.NODE_ENV === "development") {
+  server.register(fastifySwagger, {
+    openapi: {
+      info: {
+        title: "Desafio NodeJs",
+        version: "1.0.0",
+      },
+    },
+    transform: jsonSchemaTransform,
+  });
 
-server.post("/courses", (request, reply) => {
-  type Body = {
-    title: string;
-  };
+  server.register(scalarAPIReference, {
+    routePrefix: "/docs",
+    configuration: {
+      theme: "kepler",
+    },
+  });
+}
 
-  const courseId = crypto.randomUUID();
-  const body = request.body as Body;
+server.setSerializerCompiler(serializerCompiler);
+server.setValidatorCompiler(validatorCompiler);
 
-  const courseTitle = body.title;
-
-  if (!courseTitle) {
-    return reply.status(400).send({ message: "Titulo obrigatório" });
-  }
-
-  courses.push({ id: courseId, title: courseTitle });
-
-  return reply.status(201).send({ courseId });
-});
-
-server.get("/courses/:id", (request, reply) => {
-  type Params = {
-    id: string;
-  };
-  const params = request.params as Params;
-  const courseId = params.id;
-
-  const course = courses.find((course) => course.id === courseId);
-  if (course) {
-    return { course };
-  }
-
-  return reply.status(404).send();
-});
+server.register(createCourseRoute);
+server.register(getCoursesByIdRoute);
+server.register(getCoursesRoute);
 
 server.listen({ port: 3333 }).then(() => {
   console.log("HTTP server running!");

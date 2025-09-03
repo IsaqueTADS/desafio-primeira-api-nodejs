@@ -2,7 +2,7 @@ POST http://localhost:3333/courses
 Content-Type: application/json
 
 {
- "title": "Curso bolado de como progamar cagando"
+ "title": "o 2"
 }
 
 ###
@@ -12,5 +12,5 @@ GET http://localhost:3333/courses
 
 ###
 
-GET http://localhost:3333/courses/f1751f20-11f2-472a-9598-64327c580db0
+GET http://localhost:3333/courses/e6ac39db-9a30-4908-a4ab-076a6f656143
 
