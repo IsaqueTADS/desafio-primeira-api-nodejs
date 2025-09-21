@@ -1,16 +1,27 @@
 POST http://localhost:3333/courses
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNTFhNjE5Zi02ZDc2LTQ3ZGEtODNmYS0xN2Q4YjA5Zjg0OGUiLCJyb2xlIjoibWFuYWdlciIsImlhdCI6MTc1ODQwODY3OCwiZXhwIjoxNzU4NDEyMjc4fQ.eOWTNf5YyBM1AV-CtydQQW-O-hnqri9xtTK1uCpkuj8
 
 {
- "title": "o 2"
+ "title": "Curso REACTJS"    
 }
 
 ###
 
-GET http://localhost:3333/courses
+GET http://localhost:3333/courses?orderBy=title
 
 
 ###
 
-GET http://localhost:3333/courses/e6ac39db-9a30-4908-a4ab-076a6f656143
+GET http://localhost:3333/courses/8e48f9c8-84ec-4758-9b4f-2a1074cfa58b
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNTFhNjE5Zi02ZDc2LTQ3ZGEtODNmYS0xN2Q4YjA5Zjg0OGUiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc1ODQwNDY0Nn0.nS7414U4wZZQz4aCWn08jj4Zf8fFvxUeiBgu3dTa9Ts
 
+###
+
+POST  http://localhost:3333/sessions
+Content-Type: application/json
+
+{
+  "email" : "Fabricia81@hotmail.com",
+  "password": "123456"
+}
